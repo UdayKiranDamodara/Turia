@@ -12,13 +12,19 @@ const ManualInput = ({ manualInputRef }) => {
     })
 
     useEffect(()=>{
-        const time = ((input.m1*10)+input.m2)*60 + (input.s1*10) + input.s2;
+        const time = (Number(input.s2)) + (10*Number(input.s1)) + (60*Number(input.m2)) + (600*Number(input.m1))
+        console.log('m1:', input.m1)
+        console.log('m2:', input.m2)
+        console.log('s1:', input.s1)
+        console.log('s2:', input.s2)
+        console.log('time', time)
         let angleY = (Math.PI*time)/1800
         let angle = angleY - (Math.PI/2)
         const updatedValue = {
             x: Math.cos(angle)*250,
             y: Math.sin(angle)*250
         }
+        console.log('updatedValue: ', updatedValue.x, updatedValue.y)
         setPosition(updatedValue)
     }, [input])
 
