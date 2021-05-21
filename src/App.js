@@ -9,9 +9,10 @@ import './App.css';
 import { useContext, useEffect, useRef, useState } from 'react';
 
 function App() {
-  let Timer = null
-
+  // let Timer = null
+  // const [Timer, setTimer] = useState()
   const [timerName, setTimerName] = useState('')
+  const Timer = useRef()
 
   const [position, setPosition] = useContext(PositionContext)
   const [displayTime, setDisplayTime] = useState(3600)
@@ -20,6 +21,7 @@ function App() {
   const [active, setActive] = useState(true)
 
   const manualInputRef = useRef()
+  const buttonRef = useRef()
 
   // let timeRemaining = 3600
 
@@ -36,7 +38,9 @@ function App() {
   const handleButtonClick = (event) => {
 
     if(active === false){
-        window.clearInterval(Timer)
+        console.log('pausing timer: ', Timer)
+        window.clearInterval(Timer.current)
+        console.log(Timer)
         setActive(prev => !prev)
     }
 
@@ -54,8 +58,31 @@ function App() {
       setDisplayTime(timeRemaining)
       // setTimeRemaining(beginTime)
       console.log('begin time: ', beginTime)
-      Timer = setInterval(()=>{
+      // setTimer((prevTimer)=>{return setInterval(()=>{
+      //   console.log(timeRemaining)
+      //   if(timeRemaining==0){
+      //     console.log('clearing Timer now', Timer)
+      //     console.log(buttonRef.current)
+      //     reset()
+      //     // window.clearInterval(Timer)
+      //     // handleButtonClick(null)
+      //   }
+      //   console.log('Timer', Timer)
+      //   timeRemaining = timeRemaining -1
+      //   // setTimeRemaining(prev => prev-1)
+      //   setDisplayTime(timeRemaining)
+      //   let angleY = (Math.PI*timeRemaining)/1800
+      //   let angle = angleY - (Math.PI/2)
+      //   const updatedValue = {
+      //       x: Math.cos(angle)*250,
+      //       y: Math.sin(angle)*250
+      //   }
+      //   setPosition(updatedValue)
+      // }, 1000)}
+      // )
+      Timer.current = setInterval(()=>{
         console.log(timeRemaining)
+        // console.log('Timer', Timer)
         timeRemaining = timeRemaining -1
         // setTimeRemaining(prev => prev-1)
         setDisplayTime(timeRemaining)
@@ -66,6 +93,9 @@ function App() {
             y: Math.sin(angle)*250
         }
         setPosition(updatedValue)
+        if(timeRemaining==0){
+          window.clearInterval(Timer.current)
+        }
       }, 1000)
       setActive(prev => !prev)
     }
@@ -95,7 +125,7 @@ function App() {
       }
       <ManualInput manualInputRef={manualInputRef}/>
       {/* <div className='time-display'>{`${Math.floor(displayTime/60)}:${displayTime%60}`}</div> */}
-      <button className='button' onClick={handleButtonClick}>{`${(active === true) ? 'Start' : 'Stop'}`}</button>
+      <button ref={buttonRef} className='button' onClick={handleButtonClick}>{`${(active === true) ? 'Start' : 'Stop'}`}</button>
     </div>
   );
 }
